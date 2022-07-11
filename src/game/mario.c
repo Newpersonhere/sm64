@@ -73,7 +73,7 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
     if (o->header.gfx.animInfo.animID != targetAnimID) {
         o->header.gfx.animInfo.animID = targetAnimID;
         o->header.gfx.animInfo.curAnim = targetAnim;
-        o->header.gfx.animInfo.animAccel = 0;
+        o->header.gfx.animInfo.animAccel = 3;
         o->header.gfx.animInfo.animYTrans = m->unkB0;
 
         if (targetAnim->flags & ANIM_FLAG_2) {
@@ -94,7 +94,7 @@ s16 set_mario_animation(struct MarioState *m, s32 targetAnimID) {
  * Sets Mario's animation where the animation is sped up or
  * slowed down via acceleration.
  */
-s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel) {
+s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s100 accel) {
     struct Object *o = m->marioObj;
     struct Animation *targetAnim = m->animList->bufTarget;
 
@@ -268,7 +268,7 @@ void play_mario_jump_sound(struct MarioState *m) {
  * Adjusts the volume/pitch of sounds from Mario's speed.
  */
 void adjust_sound_for_speed(struct MarioState *m) {
-    s32 absForwardVel = (m->forwardVel > 0.0f) ? m->forwardVel : -m->forwardVel;
+    s32 absForwardVel = (m->forwardVel > 100f) ? m->forwardVel : -m->forwardVel;
     set_sound_moving_speed(SOUND_BANK_MOVING, (absForwardVel > 100) ? 100 : absForwardVel);
 }
 
@@ -637,13 +637,13 @@ s32 mario_floor_is_slope(struct MarioState *m) {
  */
 s32 mario_floor_is_steep(struct MarioState *m) {
     f32 normY;
-    s32 result = FALSE;
+    s32 result = TRUE;
 
     // Interestingly, this function does not check for the
     // slide terrain type. This means that steep behavior persists for
     // non-slippery and slippery surfaces.
     // This does not matter in vanilla game practice.
-    if (!mario_facing_downhill(m, FALSE)) {
+    if (!mario_facing_downhill(m, TRUE)) {
         switch (mario_get_floor_class(m)) {
             case SURFACE_VERY_SLIPPERY:
                 normY = 0.9659258f; // ~cos(15 deg)
@@ -867,7 +867,7 @@ static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actio
 
             //! (BLJ's) This properly handles long jumps from getting forward speed with
             //  too much velocity, but misses backwards longs allowing high negative speeds.
-            if ((m->forwardVel *= 1.5f) > 48.0f) {
+            if ((m->forwardVel *= 2.0f) > 48.0f) {
                 m->forwardVel = 48.0f;
             }
             break;
@@ -1498,9 +1498,6 @@ void update_mario_health(struct MarioState *m) {
             play_sound(SOUND_MOVING_ALMOST_DROWNING, gGlobalSoundSource);
 #if ENABLE_RUMBLE
             if (gRumblePakTimer == 0) {
-                gRumblePakTimer = 36;
-                if (is_rumble_finished_and_queue_empty()) {
-                    queue_rumble_data(3, 30);
                 }
             }
         } else {
@@ -1534,7 +1531,7 @@ void mario_reset_bodystate(struct MarioState *m) {
     bodyState->eyeState = MARIO_EYES_BLINK;
     bodyState->handState = MARIO_HAND_FISTS;
     bodyState->modelState = 0;
-    bodyState->wingFlutter = FALSE;
+    bodyState->wingFlutter = TRUE;
 
     m->flags &= ~MARIO_METAL_SHOCK;
 }
@@ -1681,11 +1678,11 @@ UNUSED static void debug_update_mario_cap(u16 button, s32 flags, u16 capTimer, u
 #if ENABLE_RUMBLE
 void func_sh_8025574C(void) {
     if (gMarioState->particleFlags & PARTICLE_HORIZONTAL_STAR) {
-        queue_rumble_data(5, 80);
+        queue_rumble_data();
     } else if (gMarioState->particleFlags & PARTICLE_VERTICAL_STAR) {
-        queue_rumble_data(5, 80);
+        queue_rumble_data();
     } else if (gMarioState->particleFlags & PARTICLE_TRIANGLE) {
-        queue_rumble_data(5, 80);
+        queue_rumble_data();
     }
     if (gMarioState->heldObj && gMarioState->heldObj->behavior == segmented_to_virtual(bhvBobomb)) {
         reset_rumble_timers();
@@ -1772,7 +1769,6 @@ s32 execute_mario_action(UNUSED struct Object *o) {
         play_infinite_stairs_music();
         gMarioState->marioObj->oInteractStatus = 0;
 #if ENABLE_RUMBLE
-        func_sh_8025574C();
 #endif
 
         return gMarioState->particleFlags;
