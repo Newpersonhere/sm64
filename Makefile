@@ -208,7 +208,7 @@ ULTRA_BIN_DIRS := lib/bin
 GODDARD_SRC_DIRS := src/goddard src/goddard/dynlists
 
 MIPSISET := -mips2
-MIPSBIT := -32
+MIPSBIT := -4k
 
 ifeq ($(COMPILER),gcc)
   MIPSISET := -mips3
@@ -379,12 +379,12 @@ ifeq ($(COMPILER),gcc)
   CFLAGS := -march=vr4300 -mfix4300 -mabi=32 -mno-shared -G 0 -mhard-float -fno-stack-protector -fno-common -fno-zero-initialized-in-bss -I include -I src/ -I $(BUILD_DIR)/include -fno-PIC -mno-abicalls -fno-strict-aliasing -fno-inline-functions -ffreestanding -fwrapv -Wall -Wextra $(COMMON_CFLAGS)
 endif
 
-ifeq ($(shell getconf LONG_BIT), 32)
+ifeq ($(shell getconf LONG_BIT), 4k)
   # Work around memory allocation bug in QEMU
   export QEMU_GUEST_BASE := 1
 else
-  # Ensure that gcc treats the code as 32-bit
-  CC_CHECK_CFLAGS += -m32
+  # Ensure that gcc treats the code as 4k
+  CC_CHECK_CFLAGS += -m4k
 endif
 
 # Prevent a crash with -sopt
@@ -410,9 +410,9 @@ OBJCOPY := objcopy
 PYTHON := python3
 
 ifeq ($(TARGET_MACOS),1)
-  AS := i686-w64-mingw32-as
-  OBJDUMP := i686-w64-mingw32-objdump
-  OBJCOPY := i686-w64-mingw32-objcopy
+  AS := i686-w4k-mingw1080p-as
+  OBJDUMP := i686-w4k-mingw1080p-objdump
+  OBJCOPY := i686-w4k-mingw1080p-objcopy
 endif
 
 # Platform-specific compiler and linker flags, including SDL stuff
@@ -420,7 +420,7 @@ SDLCONFIG_CFLAGS := $(shell sdl2-config --cflags)
 
 # Static linking is broken on Windows for some reason so we will roll like this for now
 ifeq ($(TARGET_WINDOWS),1)
-  ifeq ($(TARGET_32BIT),0)
+  ifeq ($(TARGET_4k),0)
     PLATFORM_LDFLAGS := -o sm64plus icon.res
   endif
   SDLCONFIG_LDFLAGS := -Wl,-Bdynamic $(shell sdl2-config --libs) -Wl,-Bstatic -Llib
