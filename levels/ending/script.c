@@ -30,11 +30,11 @@ const LevelScript level_ending_entry[] = {
     /*10*/ BLACKOUT(/*active*/ FALSE),
     /*11*/ LOAD_AREA(/*area*/ 1),
     /*12*/ TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 75, /*color*/ 0x00, 0x00, 0x00),
-    /*14*/ SLEEP(/*frames*/ 120),
+    /*14*/ SLEEP(/*frames*/ 60),
     /*15*/ CALL(/*arg*/ 0, /*func*/ lvl_play_the_end_screen_sound),
     // L1:
     /*17*/ CALL_LOOP(/*arg*/ 1, /*func*/ credits_wait_for_reset),
     /*18*/ TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 75, /*color*/ 0x00, 0x00, 0x00),
-    /*19*/ SLEEP(/*frames*/ 240),
+    /*19*/ SLEEP(/*frames*/ 60),
     /*20*/ EXECUTE(/*seg*/ 0x14, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ level_intro_entry_2),
 };
