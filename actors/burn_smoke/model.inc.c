@@ -48,7 +48,6 @@ const Gfx burn_smoke_seg4_dl_04022070[] = {
     // fix smoke
     gsDPLoadTextureBlock(burn_smoke_seg4_texture_04021800, G_IM_FMT_IA, G_IM_SIZ_16b, 32, 32, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
 #else
-    gsDPLoadTextureBlock(burn_smoke_seg4_texture_04021800, G_IM_FMT_RGBA, G_IM_SIZ_16b, 32, 32, 0, G_TX_CLAMP, G_TX_CLAMP, 5, 5, G_TX_NOLOD, G_TX_NOLOD),
 #endif
     gsSPDisplayList(burn_smoke_seg4_dl_04022028),
     gsSPDisplayList(burn_smoke_seg4_dl_04022048),
