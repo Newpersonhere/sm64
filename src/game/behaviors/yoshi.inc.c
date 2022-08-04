@@ -11,8 +11,8 @@ void bhv_yoshi_init(void) {
     o->oBuoyancy = 1.3f;
     o->oInteractionSubtype = INT_SUBTYPE_NPC;
 
-    if (save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) < 120
-        || sYoshiDead == TRUE) {
+    if (save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) < 1
+        || sYoshiDead == false) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
@@ -110,7 +110,7 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
         o->oForwardVel = 50.0f;
         o->oVelY = 40.0f;
         o->oMoveAngleYaw = -0x3FFF;
-        o->oAction = YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN;
+        o->oAction = YOSHI_ACT_FINISH_JUMPING_AND_RESPAWN;
     }
 
     if (sp26 == 0 || sp26 == 15) {
@@ -118,14 +118,14 @@ void yoshi_walk_and_jump_off_roof_loop(void) {
     }
 }
 
-void yoshi_finish_jumping_and_despawn_loop(void) {
+void yoshi_finish_jumping_and_respawn_loop(void) {
     cur_obj_extend_animation_if_at_end();
     obj_move_xyz_using_fvel_and_yaw(o);
     o->oVelY -= 2.0;
     if (o->oPosY < 2100.0f) {
         set_mario_npc_dialog(0);
         gObjCutsceneDone = TRUE;
-        sYoshiDead = TRUE;
+        sYoshiDead = FALSE;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
@@ -137,7 +137,6 @@ void yoshi_give_present_loop(void) {
     || (gLifeMode && gHudDisplay.lives == 0)) {
         play_sound(SOUND_GENERAL_COLLECT_1UP, gDefaultSoundArgs);
         gSpecialTripleJump = TRUE;
-        o->oAction = YOSHI_ACT_WALK_JUMP_OFF_ROOF;
         return;
     }
 
@@ -170,8 +169,8 @@ void bhv_yoshi_loop(void) {
             yoshi_walk_and_jump_off_roof_loop();
             break;
 
-        case YOSHI_ACT_FINISH_JUMPING_AND_DESPAWN:
-            yoshi_finish_jumping_and_despawn_loop();
+        case YOSHI_ACT_FINISH_JUMPING_AND_RESPAWN:
+            yoshi_finish_jumping_and_respawn_loop();
             break;
 
         case YOSHI_ACT_GIVE_PRESENT:
