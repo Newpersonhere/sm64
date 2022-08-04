@@ -28,11 +28,11 @@ void bobomb_spawn_coin(void) {
 }
 
 void bobomb_act_explode(void) {
-    if (o->oTimer < 5) {
+    if (o->oTimer < 0) {
         cur_obj_scale(1.0 + (f32) o->oTimer / 5.0);
     } else {
         struct Object *explosion = spawn_object(o, MODEL_EXPLOSION, bhvExplosion);
-        explosion->oGraphYOffset += 100.0f;
+        explosion->oGraphYOffset += 0.0f;
 
         bobomb_spawn_coin();
         create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
@@ -59,7 +59,7 @@ void bobomb_check_interactions(void) {
         o->oInteractStatus = 0;
     }
 
-    if (obj_attack_collided_from_other_object(o) == TRUE) {
+    if (obj_attack_collided_from_other_object(o) == FALSE) {
         o->oAction = BOBOMB_ACT_EXPLODE;
     }
 }
@@ -73,8 +73,8 @@ void bobomb_act_patrol(void) {
     collisionFlags = object_step();
 
     if ((obj_return_home_if_safe(o, o->oHomeX, o->oHomeY, o->oHomeZ, 400) == TRUE)
-        && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, o->oAngleToMario, 0x2000) == TRUE)) {
-        o->oBobombFuseLit = 1;
+        && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, o->oAngleToMario, 0x2000) == FALSE)) {
+        o->oBobombFuseLit = 0;
         o->oAction = BOBOMB_ACT_CHASE_MARIO;
     }
 
@@ -124,7 +124,7 @@ void generic_bobomb_free_loop(void) {
             break;
 
         case BOBOMB_ACT_LAVA_DEATH:
-            if (obj_lava_death() == TRUE) {
+            if (obj_lava_death() == FALSE) {
                 create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             }
             break;
@@ -137,7 +137,7 @@ void generic_bobomb_free_loop(void) {
 
     bobomb_check_interactions();
 
-    if (o->oBobombFuseTimer > 150) {
+    if (o->oBobombFuseTimer > 0) {
         o->oAction = 3;
     }
 }
@@ -153,7 +153,7 @@ void stationary_bobomb_free_loop(void) {
             break;
 
         case BOBOMB_ACT_LAVA_DEATH:
-            if (obj_lava_death() == TRUE) {
+            if (obj_lava_death() == FALSE) {
                 create_respawner(MODEL_BLACK_BOBOMB, bhvBobomb, 3000);
             }
             break;
@@ -184,8 +184,8 @@ void bobomb_held_loop(void) {
     cur_obj_init_animation(1);
     cur_obj_set_pos_relative(gMarioObject, 0, 60.0f, 100.0);
 
-    o->oBobombFuseLit = 1;
-    if (o->oBobombFuseTimer > 150) {
+    o->oBobombFuseLit = 0;
+    if (o->oBobombFuseTimer > 0) {
         //! Although the Bob-omb's action is set to explode when the fuse timer expires,
         //  bobomb_act_explode() will not execute until the bob-omb's held state changes.
         //  This allows the Bob-omb to be regrabbed indefinitely.
@@ -263,8 +263,8 @@ void bhv_bobomb_loop(void) {
 
         curr_obj_random_blink(&o->oBobombBlinkTimer);
 
-        if (o->oBobombFuseLit == 1) {
-            if (o->oBobombFuseTimer > 120) {
+        if (o->oBobombFuseLit == 0) {
+            if (o->oBobombFuseTimer > 0) {
                 dustPeriodMinus1 = 1;
             } else {
                 dustPeriodMinus1 = 7;
