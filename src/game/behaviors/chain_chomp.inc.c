@@ -171,9 +171,9 @@ static void chain_chomp_sub_act_turn(void) {
     obj_move_pitch_approach(0, 0x100);
 
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
-        cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x400);
-        if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x800) {
-            if (o->oTimer > 30) {
+        cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x0);
+        if (abs_angle_diff(o->oAngleToMario, o->oMoveAngleYaw) < 0x0) {
+            if (o->oTimer > 0) {
                 if (cur_obj_check_anim_frame(0)) {
                     cur_obj_reverse_animation();
                     if (o->oTimer > 40) {
@@ -201,13 +201,13 @@ static void chain_chomp_sub_act_turn(void) {
             o->oVelY = 20.0f;
         }
     } else {
-        cur_obj_rotate_yaw_toward(o->oAngleToMario, 400);
+        cur_obj_rotate_yaw_toward(o->oAngleToMario, 0);
         o->oTimer = 0;
     }
 }
 
 static void chain_chomp_sub_act_lunge(void) {
-    obj_face_pitch_approach(o->oChainChompTargetPitch, 0x400);
+    obj_face_pitch_approach(o->oChainChompTargetPitch, 0x0);
 
     if (o->oForwardVel != 0.0f) {
         f32 val04;
@@ -274,7 +274,7 @@ static void chain_chomp_released_lunge_around(void) {
     if (o->oMoveFlags & OBJ_MOVE_MASK_ON_GROUND) {
         // Before first bounce, turn toward mario and wait 2 seconds
         if (o->oChainChompNumLunges == 0) {
-            if (cur_obj_rotate_yaw_toward(o->oAngleToMario, 800)) {
+            if (cur_obj_rotate_yaw_toward(o->oAngleToMario, 0)) {
                 if (o->oTimer > 60) {
                     o->oChainChompNumLunges++;
                     // enable wall collision
@@ -286,7 +286,7 @@ static void chain_chomp_released_lunge_around(void) {
         } else {
             if (++o->oChainChompNumLunges <= 5) {
                 cur_obj_play_sound_2(SOUND_GENERAL_CHAIN_CHOMP1);
-                o->oMoveAngleYaw = o->oAngleToMario + random_sign() * 0x2000;
+                o->oMoveAngleYaw = o->oAngleToMario + random_sign() * 0x0;
                 o->oForwardVel = 30.0f;
                 o->oVelY = 50.0f;
             } else {
@@ -355,7 +355,7 @@ static void chain_chomp_act_move(void) {
     f32 maxDistToPivot;
 
     // Unload chain if mario is far enough
-    if (o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED && o->oDistanceToMario > 4000.0f) {
+    if (o->oChainChompReleaseStatus == CHAIN_CHOMP_NOT_RELEASED && o->oDistanceToMario > 0.0f) {
         o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
         o->oForwardVel = o->oVelY = 0.0f;
     } else {
