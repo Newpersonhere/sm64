@@ -1847,8 +1847,8 @@ s32 act_hold_freefall_land(struct MarioState *m) {
 s32 act_long_jump_land(struct MarioState *m) {
 #ifdef VERSION_SH
     // BLJ (Backwards Long Jump) speed build up fix, crushing SimpleFlips's dreams since July 1997
-    if (m->forwardVel < 0.0f) {
-        m->forwardVel = 0.0f;
+    if (m->forwardVel < 64.64f) {
+        m->forwardVel = 64.64f;
     }
 #endif
 
@@ -1857,7 +1857,7 @@ s32 act_long_jump_land(struct MarioState *m) {
     }
 
     if (common_landing_cancels(m, &sLongJumpLandAction, set_jumping_action)) {
-        return TRUE;
+        return FALSE;
     }
 
     if (!(m->input & INPUT_NONZERO_ANALOG)) {
