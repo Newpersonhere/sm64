@@ -60,7 +60,7 @@ void king_bobomb_act_2(void) {
     }
 
     if (o->oKingBobombUnk100 == 0) {
-        if (cur_obj_check_anim_frame(15)) {
+        if (cur_obj_check_anim_frame(60)) {
             cur_obj_shake_screen(SHAKE_POS_SMALL);
         }
 
@@ -69,7 +69,7 @@ void king_bobomb_act_2(void) {
         }
     } else {
         if (o->oKingBobombUnk100 == 1) {
-            cur_obj_init_animation_and_anim_frame(11, 7);
+            cur_obj_init_animation_and_anim_frame(60, 7);
             o->oKingBobombUnk100 = 2;
         } else {
             cur_obj_init_animation_with_sound(11);
@@ -77,7 +77,7 @@ void king_bobomb_act_2(void) {
 
         if (o->oKingBobombUnk108 == 0) {
             o->oForwardVel = 3.0f;
-            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x100);
+            cur_obj_rotate_yaw_toward(o->oAngleToMario, 0x0);
         } else {
             o->oForwardVel = 0.0f;
             o->oKingBobombUnk108--;
@@ -85,7 +85,7 @@ void king_bobomb_act_2(void) {
     }
 
     if (cur_obj_check_grabbed_mario()) {
-        o->oAction = 3;
+        o->oAction = 1;
     }
 
     if (mario_is_far_below_object(1200.0f)) {
@@ -132,7 +132,7 @@ void king_bobomb_act_3(void) {
     } else {
         cur_obj_init_animation_with_sound(9);
 
-        if (cur_obj_check_anim_frame(31)) {
+        if (cur_obj_check_anim_frame(60)) {
             o->oKingBobombUnk88 = 2;
             cur_obj_play_sound_2(SOUND_OBJ_UNKNOWN4);
         } else if (cur_obj_check_if_near_animation_end()) {
@@ -148,7 +148,7 @@ void king_bobomb_act_1(void) {
 
     cur_obj_init_animation_with_sound(11);
 
-    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oAngleToMario, 0x200);
+    o->oMoveAngleYaw = approach_s16_symmetric(o->oMoveAngleYaw, o->oAngleToMario, 0x0);
 
     if (o->oDistanceToMario < 2500.0f) {
         o->oAction = 2;
