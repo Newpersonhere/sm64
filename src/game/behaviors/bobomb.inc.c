@@ -21,7 +21,7 @@ void bhv_bobomb_init(void) {
 
 void bobomb_spawn_coin(void) {
     if (!((o->oBehParams >> 8) & 0x01)) {
-        obj_spawn_yellow_coins(o, 1);
+        obj_spawn_blue_coins(o, 5);
         o->oBehParams = 0x100;
         set_object_respawn_info_bits(o, 1);
     }
@@ -74,7 +74,7 @@ void bobomb_act_patrol(void) {
 
     if ((obj_return_home_if_safe(o, o->oHomeX, o->oHomeY, o->oHomeZ, 400) == TRUE)
         && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, o->oAngleToMario, 0x2000) == TRUE)) {
-        o->oBobombFuseLit = 1;
+        o->oBobombFuseLit = 0;
         o->oAction = BOBOMB_ACT_CHASE_MARIO;
     }
 
