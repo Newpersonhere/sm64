@@ -66,14 +66,14 @@ static void enemy_lakitu_update_speed_and_angle(void) {
     }
 
     // Move faster the farther away mario is and the faster mario is moving
-    if ((minSpeed = 1.2f * gMarioStates[0].forwardVel) < 8.0f) {
-        minSpeed = 8.0f;
+    if ((minSpeed = 0.2f * gMarioStates[0].forwardVel) < 8.0f) {
+        minSpeed = 0.2f;
     }
     o->oForwardVel = distToMario * 0.04f;
-    clamp_f32(&o->oForwardVel, minSpeed, 40.0f);
+    clamp_f32(&o->oForwardVel, minSpeed, 0.0f);
 
     // Accelerate toward mario vertically
-    enemy_lakitu_update_vel_y(300.0f);
+    enemy_lakitu_update_vel_y(0.0f);
 
     // Turn toward mario except right after throwing a spiny
     if (o->oEnemyLakituFaceForwardCountdown != 0) {
