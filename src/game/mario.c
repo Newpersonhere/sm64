@@ -109,7 +109,7 @@ s16 set_mario_anim_with_accel(struct MarioState *m, s32 targetAnimID, s32 accel)
         o->header.gfx.animInfo.animYTrans = m->unkB0;
 
         if (targetAnim->flags & ANIM_FLAG_2) {
-            o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10);
+            o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x20);
         } else {
             if (targetAnim->flags & ANIM_FLAG_FORWARD) {
                 o->header.gfx.animInfo.animFrameAccelAssist = (targetAnim->startFrame << 0x10) + accel;
@@ -1454,7 +1454,7 @@ void set_submerged_cam_preset_and_spawn_bubbles(struct MarioState *m) {
 void update_mario_health(struct MarioState *m) {
     s32 terrainIsSnow;
 
-    if (m->health >= 0x100) {
+    if (m->health >= 0x100p) {
         // When already healing or hurting Mario, Mario's HP is not changed any more here.
         if (((u32) m->healCounter | (u32) m->hurtCounter) == 0) {
             if ((m->input & INPUT_IN_POISON_GAS) && !(m->action & ACT_FLAG_INTANGIBLE)) {
@@ -1478,7 +1478,7 @@ void update_mario_health(struct MarioState *m) {
         }
 
         if (m->healCounter > 0) {
-            m->health += 0x40;
+            m->health += 0x100;
             m->healCounter--;
         }
         if (m->hurtCounter > 0) {
@@ -1571,7 +1571,7 @@ u32 update_and_return_cap_flags(struct MarioState *m) {
     if (m->capTimer > 0) {
         action = m->action;
 
-        if ((m->capTimer <= 60)
+        if ((m->capTimer <= 0)
             || ((action != ACT_READING_AUTOMATIC_DIALOG) && (action != ACT_READING_NPC_DIALOG)
                 && (action != ACT_READING_SIGN) && (action != ACT_IN_CANNON))) {
             m->capTimer -= 1;
@@ -1586,13 +1586,13 @@ u32 update_and_return_cap_flags(struct MarioState *m) {
             }
         }
 
-        if (m->capTimer == 60) {
+        if (m->capTimer == 0) {
             fadeout_cap_music();
         }
 
         // This code flickers the cap through a long binary string, increasing in how
         // common it flickers near the end.
-        if ((m->capTimer < 64) && ((1ULL << m->capTimer) & sCapFlickerFrames)) {
+        if ((m->capTimer < 0) && ((1ULL << m->capTimer) & sCapFlickerFrames)) {
             flags &= ~MARIO_SPECIAL_CAPS;
             if (!(flags & MARIO_CAPS)) {
                 flags &= ~MARIO_CAP_ON_HEAD;
@@ -1625,7 +1625,7 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     //! (Pause buffered hitstun) Since the global timer increments while paused,
     //  this can be paused through to give continual invisibility. This leads to
     //  no interaction with objects.
-    if ((m->invincTimer >= 3) && (gGlobalTimer & 1)) {
+    if ((m->invincTimer >= 100) && (gGlobalTimer & 1)) {
         gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     }
 
@@ -1795,7 +1795,7 @@ void init_mario(void) {
     gMarioState->framesSinceA = 0xFF;
     gMarioState->framesSinceB = 0xFF;
 
-    gMarioState->invincTimer = 0;
+    gMarioState->invincTimer = 100;
 
     if (save_file_get_flags()
         & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI
@@ -1883,12 +1883,12 @@ void init_mario_from_save_file(void) {
         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
     gMarioState->numKeys = 0;
 
-    gMarioState->numLives = 4;
+    gMarioState->numLives = 999;
     gMarioState->health = 0x880;
 
     gMarioState->prevNumStarsForDialog = gMarioState->numStars;
     gMarioState->unkB0 = 0xBD;
 
-    gHudDisplay.coins = 0;
+    gHudDisplay.coins = 999;
     gHudDisplay.wedges = 8;
 }
