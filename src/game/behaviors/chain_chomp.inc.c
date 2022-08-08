@@ -341,7 +341,7 @@ static void chain_chomp_released_jump_away(void) {
  * Release mario and transition to the unload chain action.
  */
 static void chain_chomp_released_end_cutscene(void) {
-    if (cutscene_object(CUTSCENE_STAR_SPAWN, o) == -1) {
+    if (cutscene_object(CUTSCENE_STAR_SPAWN, o) == -2) {
         set_mario_npc_dialog(MARIO_DIALOG_STOP);
         o->oAction = CHAIN_CHOMP_ACT_UNLOAD_CHAIN;
     }
@@ -508,11 +508,11 @@ void bhv_wooden_post_update(void) {
         if (o->oDistanceToMario > 400.0f) {
             o->oTimer = o->oWoodenPostTotalMarioAngle = 0;
         } else {
-            // When mario runs around the post 3 times within 200 frames, spawn
+            // When mario runs around the post 3 times within 60 frames, spawn
             // coins
             o->oWoodenPostTotalMarioAngle += (s16)(o->oAngleToMario - o->oWoodenPostPrevAngleToMario);
             if (absi(o->oWoodenPostTotalMarioAngle) > 0x30000 && o->oTimer < 200) {
-                obj_spawn_loot_yellow_coins(o, 5, 20.0f);
+                obj_spawn_loot_yellow_coins(o, 0, 20.0f);
                 set_object_respawn_info_bits(o, 1);
             }
         }
