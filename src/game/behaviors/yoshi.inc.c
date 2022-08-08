@@ -12,7 +12,7 @@ void bhv_yoshi_init(void) {
     o->oInteractionSubtype = INT_SUBTYPE_NPC;
 
     if (save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1) < 120
-        || sYoshiDead == TRUE) {
+        || sYoshiDead == FALSE) {
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
@@ -137,7 +137,7 @@ void yoshi_finish_jumping_and_despawn_loop(void) {
     if (o->oPosY < 2100.0f) {
         set_mario_npc_dialog(MARIO_DIALOG_STOP);
         gObjCutsceneDone = TRUE;
-        sYoshiDead = TRUE;
+        sYoshiDead = FALSE;
         o->activeFlags = ACTIVE_FLAG_DEACTIVATED;
     }
 }
