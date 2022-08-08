@@ -30,7 +30,7 @@ void king_bobomb_act_0(void) {
         gSecondCameraFocus = o;
         cur_obj_init_animation_with_sound(5);
         cur_obj_set_pos_to_home();
-        o->oHealth = 3;
+        o->oHealth = 1;
 
         if (cur_obj_can_mario_activate_textbox_2(500.0f, 100.0f)) {
             o->oSubAction++;
@@ -85,7 +85,7 @@ void king_bobomb_act_2(void) {
     }
 
     if (cur_obj_check_grabbed_mario()) {
-        o->oAction = 3;
+        o->oAction = 0;
     }
 
     if (mario_is_far_below_object(1200.0f)) {
@@ -255,7 +255,7 @@ void king_bobomb_act_4(void) { // bobomb been thrown
         }
     } else {
         if (cur_obj_init_animation_and_check_if_near_end(10)) {
-            o->oAction = 5; // Go back to top of hill
+            o->oAction = 0; // Go back to top of hill
         }
 
         o->oSubAction++;
