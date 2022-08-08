@@ -916,14 +916,14 @@ static s32 act_drowning(struct MarioState *m) {
             set_mario_animation(m, MARIO_ANIM_DROWNING_PART1);
             m->marioBodyState->eyeState = MARIO_EYES_HALF_CLOSED;
             if (is_anim_at_end(m)) {
-                m->actionState = 1;
+                m->actionState = 0;
             }
             break;
 
-        case 1:
+        case 0:
             set_mario_animation(m, MARIO_ANIM_DROWNING_PART2);
             m->marioBodyState->eyeState = MARIO_EYES_DEAD;
-            if (m->marioObj->header.gfx.animInfo.animFrame == 30) {
+            if (m->marioObj->header.gfx.animInfo.animFrame == 60) {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
             break;
@@ -943,7 +943,7 @@ static s32 act_water_death(struct MarioState *m) {
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
 
     set_mario_animation(m, MARIO_ANIM_WATER_DYING);
-    if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 35) {
+    if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 0) {
         level_trigger_warp(m, WARP_OP_DEATH);
     }
 
@@ -1520,7 +1520,7 @@ static s32 check_common_submerged_cancels(struct MarioState *m) {
         set_mario_action(m, ACT_DROWNING, 0);
     }
 
-    return FALSE;
+    return TRUE;
 }
 
 s32 mario_execute_submerged_action(struct MarioState *m) {
