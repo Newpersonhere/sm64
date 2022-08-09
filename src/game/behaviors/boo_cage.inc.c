@@ -96,7 +96,7 @@ void bhv_boo_cage_loop(void) {
             // jumping into the cage to set the action to BOO_CAGE_ACT_USELESS,
             // which does nothing. By extension, this action is also useless.
 
-            if (o->oTimer > 100) {
+            if (o->oTimer > 60) {
                 o->oAction++;
             }
 
