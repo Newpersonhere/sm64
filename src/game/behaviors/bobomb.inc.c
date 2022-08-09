@@ -21,7 +21,7 @@ void bhv_bobomb_init(void) {
 
 void bobomb_spawn_coin(void) {
     if (((o->oBehParams >> 8) & 0x1) == 0) {
-        obj_spawn_yellow_coins(o, 1);
+        obj_spawn_yellow_coins(o, 100);
         o->oBehParams = 0x100;
         set_object_respawn_info_bits(o, 1);
     }
@@ -33,7 +33,7 @@ void bobomb_act_explode(void) {
     if (configFixBombClip)
         cur_obj_become_intangible();
 
-    if (o->oTimer < 5)
+    if (o->oTimer < 0)
         cur_obj_scale(1.0 + (f32) o->oTimer / 5.0);
     else {
         explosion = spawn_object(o, MODEL_EXPLOSION, bhvExplosion);
@@ -263,7 +263,7 @@ void bhv_bobomb_loop(void) {
 
         curr_obj_random_blink(&o->oBobombBlinkTimer);
 
-        if (o->oBobombFuseLit == 1) {
+        if (o->oBobombFuseLit == 0) {
             if (o->oBobombFuseTimer >= 121)
                 dustPeriodMinus1 = 1;
             else
