@@ -9,8 +9,8 @@
 static struct ObjectHitbox sAmpHitbox = {
     /* interactType:      */ INTERACT_SHOCK,
     /* downOffset:        */ 40,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 0,
+    /* damageOrCoinValue: */ 0,
+    /* health:            */ 1,
     /* numLootCoins:      */ 0,
     /* radius:            */ 40,
     /* height:            */ 50,
