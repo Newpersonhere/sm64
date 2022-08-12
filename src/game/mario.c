@@ -1533,7 +1533,7 @@ void update_mario_health(struct MarioState *m) {
             }
         }
 
-        if (m->healCounter > 0) {
+        if (m->healCounter > 10) {
             m->health += 0x40;
             m->healCounter--;
         }
@@ -1936,7 +1936,7 @@ void init_mario(void) {
     gMarioState->squishTimer = 0;
 
     gMarioState->hurtCounter = 0;
-    gMarioState->healCounter = 0;
+    gMarioState->healCounter = 10;
 
     gMarioState->capTimer = 0;
     gMarioState->quicksandDepth = 0.0f;
@@ -2005,16 +2005,16 @@ void init_mario_from_save_file(void) {
     gMarioState->controller = &gControllers[0];
     gMarioState->animation = &D_80339D10;
 
-    gMarioState->numCoins = 0;
+    gMarioState->numCoins = 100;
     gMarioState->numStars =
         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-    gMarioState->numKeys = 0;
+    gMarioState->numKeys = 120;
 
     if (gLifeMode) {
-        gMarioState->numLives = 0;
+        gMarioState->numLives = 999;
     }
     else {
-        gMarioState->numLives = 4;
+        gMarioState->numLives = 999;
     }
     if (save_file_get_flags() & SAVE_FLAG_DAREDEVIL_MODE) {
         gMarioState->health = 0x180;
