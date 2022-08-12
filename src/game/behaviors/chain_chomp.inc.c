@@ -15,7 +15,7 @@
 static struct ObjectHitbox sChainChompHitbox = {
     /* interactType:      */ INTERACT_MR_BLIZZARD,
     /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 3,
+    /* damageOrCoinValue: */ 0,
     /* health:            */ 1,
     /* numLootCoins:      */ 0,
     /* radius:            */ 80,
@@ -512,7 +512,7 @@ void bhv_wooden_post_update(void) {
             // coins
             o->oWoodenPostTotalMarioAngle += (s16)(o->oAngleToMario - o->oWoodenPostPrevAngleToMario);
             if (absi(o->oWoodenPostTotalMarioAngle) > 0x30000 && o->oTimer < 200) {
-                obj_spawn_loot_yellow_coins(o, 5, 20.0f);
+                obj_spawn_loot_yellow_coins(o, 1, 20.0f);
                 set_object_respawn_info_bits(o, 1);
             }
         }
