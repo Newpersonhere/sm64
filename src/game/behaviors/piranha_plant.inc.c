@@ -38,7 +38,7 @@ void piranha_plant_act_idle(void) {
  */
 s32 piranha_plant_check_interactions(void) {
     s32 i;
-    s32 interacted = TRUE;
+    s32 interacted = FALSE;
 
     if (o->oInteractStatus & INT_STATUS_INTERACTED) {
         func_80321080(50);
@@ -85,7 +85,7 @@ void piranha_plant_act_sleeping(void) {
     /**
      * Make Piranha Plants harmful when sleeping - but do it explicitly.
      */
-    o->oDamageOrCoinValue = 3;
+    o->oDamageOrCoinValue = 0;
 #endif
 
     if (o->oDistanceToMario < 400.0f) {
@@ -113,13 +113,13 @@ void piranha_plant_act_woken_up(void) {
      * necessary in the US version because it is set to 3 by default and is
      * never changed in the JP version.
      */
-    o->oDamageOrCoinValue = 3;
+    o->oDamageOrCoinValue = 0;
 #endif
     if (o->oTimer == 0) {
         func_80321080(50);
     }
 
-    if (!piranha_plant_check_interactions() && o->oTimer > 10) {
+    if (!piranha_plant_check_interactions() && o->oTimer > 0) {
         o->oAction = PIRANHA_PLANT_ACT_BITING;
     }
 }
@@ -281,10 +281,10 @@ void piranha_plant_act_biting(void) {
  */
 s32 mario_moving_fast_enough_to_make_piranha_plant_bite(void) {
     if (gMarioStates[0].vel[1] > 10.0f) {
-        return TRUE;
+        return FALSE;
     }
     if (gMarioStates[0].forwardVel > 10.0f) {
-        return TRUE;
+        return FALSE;
     }
     return FALSE;
 }
