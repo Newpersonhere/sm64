@@ -13,7 +13,7 @@
 static struct ObjectHitbox sPokeyBodyPartHitbox = {
     /* interactType:      */ INTERACT_BOUNCE_TOP,
     /* downOffset:        */ 10,
-    /* damageOrCoinValue: */ 2,
+    /* damageOrCoinValue: */ 0,
     /* health:            */ 0,
     /* numLootCoins:      */ 0,
     /* radius:            */ 40,
