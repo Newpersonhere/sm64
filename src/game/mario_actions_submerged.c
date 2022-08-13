@@ -55,7 +55,7 @@ static f32 get_buoyancy(struct MarioState *m) {
     f32 buoyancy = 0.0f;
 
     if (m->flags & MARIO_METAL_CAP) {
-        if (m->action & ACT_FLAG_INVULNERABLE) {
+        if (m->action & ACT_FLAG_VULNERABLE) {
             buoyancy = -2.0f;
         } else {
             buoyancy = -18.0f;
@@ -903,10 +903,10 @@ static void common_water_knockback_step(struct MarioState *m, s32 animation, u32
 
     if (is_anim_at_end(m)) {
         if (arg3 > 0) {
-            m->invincTimer = 30;
+            m->invincTimer = 999;
         }
 
-        set_mario_action(m, m->health >= 0x100 ? endAction : ACT_WATER_DEATH, 0);
+        set_mario_action(m, m->health >= 0x999 ? endAction : ACT_WATER_DEATH, 0);
     }
 }
 
@@ -931,8 +931,8 @@ static s32 act_water_shocked(struct MarioState *m) {
     }
 
     if (m->actionTimer >= 6) {
-        m->invincTimer = 30;
-        set_mario_action(m, m->health < 0x100 ? ACT_WATER_DEATH : ACT_WATER_IDLE, 0);
+        m->invincTimer = 999;
+        set_mario_action(m, m->health < 0x999 ? ACT_WATER_DEATH : ACT_WATER_IDLE, 0);
     }
 
     stationary_slow_down(m);
@@ -947,14 +947,14 @@ static s32 act_drowning(struct MarioState *m) {
             set_mario_animation(m, MARIO_ANIM_DROWNING_PART1);
             m->marioBodyState->eyeState = MARIO_EYES_HALF_CLOSED;
             if (is_anim_at_end(m)) {
-                m->actionState = 1;
+                m->actionState = 0;
             }
             break;
 
         case 1:
             set_mario_animation(m, MARIO_ANIM_DROWNING_PART2);
             m->marioBodyState->eyeState = MARIO_EYES_DEAD;
-            if (m->marioObj->header.gfx.animInfo.animFrame == 30) {
+            if (m->marioObj->header.gfx.animInfo.animFrame == 60) {
                 level_trigger_warp(m, WARP_OP_DEATH);
             }
             break;
@@ -974,7 +974,7 @@ static s32 act_water_death(struct MarioState *m) {
     m->marioBodyState->eyeState = MARIO_EYES_DEAD;
 
     set_mario_animation(m, MARIO_ANIM_WATER_DYING);
-    if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 35) {
+    if (set_mario_animation(m, MARIO_ANIM_WATER_DYING) == 0) {
         level_trigger_warp(m, WARP_OP_DEATH);
     }
 
