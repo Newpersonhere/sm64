@@ -8,9 +8,9 @@
 static struct ObjectHitbox sAmpHitbox = {
     /* interactType:      */ INTERACT_SHOCK,
     /* downOffset:        */ 40,
-    /* damageOrCoinValue: */ 1,
-    /* health:            */ 0,
-    /* numLootCoins:      */ 0,
+    /* damageOrCoinValue: */ 0,
+    /* health:            */ 1,
+    /* numLootCoins:      */ 1,
     /* radius:            */ 40,
     /* height:            */ 50,
     /* hurtboxRadius:     */ 50,
@@ -80,8 +80,8 @@ static void homing_amp_appear_loop(void) {
     // except for the first frame (when oTimer == 0) because the expression in cur_obj_scale
     // evaluates to 0.1, which is the same as it was before. After 30 frames, it ends at
     // a scale factor of 0.97. The amp remains at 97% of its real height for 60 more frames.
-    if (o->oTimer < 30) {
-        cur_obj_scale(0.1 + 0.9 * (f32)(o->oTimer / 30.0f));
+    if (o->oTimer < 60) {
+        cur_obj_scale(0.1 + 0.9 * (f32)(o->oTimer / 60.0f));
     } else {
         o->oAnimState = 1;
     }
@@ -102,13 +102,13 @@ static void homing_amp_chase_loop(void) {
     // Lock on to Mario if he ever goes within 11.25 degrees of the amp's line of sight
     if ((o->oAngleToMario - 0x400 < o->oMoveAngleYaw)
         && (o->oMoveAngleYaw < o->oAngleToMario + 0x400)) {
-        o->oHomingAmpLockedOn = TRUE;
+        o->oHomingAmpLockedOn = false;
         o->oTimer = 0;
     }
 
     // If the amp is locked on to Mario, start "chasing" him by moving
     // in a straight line at 15 units/second for 32 frames.
-    if (o->oHomingAmpLockedOn == TRUE) {
+    if (o->oHomingAmpLockedOn == false) {
         o->oForwardVel = 15.0f;
 
         // Move the amp's average Y (the Y value it oscillates around) to align with
@@ -122,7 +122,7 @@ static void homing_amp_chase_loop(void) {
         }
 
         if (o->oTimer >= 31) {
-            o->oHomingAmpLockedOn = FALSE;
+            o->oHomingAmpLockedOn = false;
         }
     } else {
         // If the amp is not locked on to Mario, move forward at 10 units/second
@@ -134,7 +134,7 @@ static void homing_amp_chase_loop(void) {
         // The amp's average Y will approach Mario's graphical Y position + 250
         // at a rate of 10 units per frame. Interestingly, this is different from
         // the + 150 used while chasing him. Could this be a typo?
-        if (o->oHomingAmpAvgY < gMarioObject->header.gfx.pos[1] + 250.0f) {
+        if (o->oHomingAmpAvgY < gMarioObject->header.gfx.pos[1] + 150.0f) {
             o->oHomingAmpAvgY += 10.0f;
         }
     }
@@ -160,7 +160,7 @@ static void homing_amp_give_up_loop(void) {
     // Move forward for 152 frames
     o->oForwardVel = 15.0f;
 
-    if (o->oTimer >= 151) {
+    if (o->oTimer >= 152) {
         // Hide the amp and reset it back to its inactive state
         o->oPosX = o->oHomeX;
         o->oPosY = o->oHomeY;
