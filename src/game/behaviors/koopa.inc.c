@@ -111,7 +111,7 @@ static s32 koopa_check_run_from_mario(void) {
     if (o->oKoopaDistanceToMario < 300.0f
         && abs_angle_diff(o->oKoopaAngleToMario, o->oMoveAngleYaw) < 0x3000) {
         o->oAction = KOOPA_SHELLED_ACT_RUN_FROM_MARIO;
-        return TRUE;
+        return true;
     }
 
     return FALSE;
@@ -211,7 +211,7 @@ static void koopa_shelled_act_run_from_mario(void) {
         o->oDistanceToMario = 0.0f;
     }
 
-    if (o->oTimer > 30 && o->oDistanceToMario > 800.0f) {
+    if (o->oTimer > 60 && o->oDistanceToMario > 800.0f) {
         if (obj_forward_vel_approach(0.0f, 1.0f)) {
             o->oAction = KOOPA_SHELLED_ACT_STOPPED;
         }
@@ -472,7 +472,7 @@ static void koopa_unshelled_update(void) {
  * optionally begin the timer.
  */
 s32 obj_begin_race(s32 noTimer) {
-    if (o->oTimer == 50) {
+    if (o->oTimer == 60) {
         cur_obj_play_sound_2(SOUND_GENERAL_RACE_GUN_SHOT);
 
         if (!noTimer) {
@@ -481,14 +481,14 @@ s32 obj_begin_race(s32 noTimer) {
             level_control_timer(TIMER_CONTROL_SHOW);
             level_control_timer(TIMER_CONTROL_START);
 
-            o->parentObj->oKoopaRaceEndpointRaceBegun = TRUE;
+            o->parentObj->oKoopaRaceEndpointRaceBegun = true;
         }
 
         // Unfreeze mario and disable time stop to begin the race
         set_mario_npc_dialog(0);
         disable_time_stop_including_mario();
-    } else if (o->oTimer > 50) {
-        return TRUE;
+    } else if (o->oTimer > 60) {
+        return true;
     }
 
     return FALSE;
@@ -523,7 +523,7 @@ static void koopa_the_quick_act_show_init_text(void) {
     UNUSED s32 unused;
 
     if (response == 1) {
-        gMarioShotFromCannon = FALSE;
+        gMarioShotFromCannon = true;
         o->oAction = KOOPA_THE_QUICK_ACT_RACE;
         o->oForwardVel = 0.0f;
 
@@ -730,7 +730,6 @@ static void koopa_the_quick_act_after_race(void) {
 
             if (o->parentObj->oKoopaRaceEndpointRaceStatus != 0) {
                 if (o->parentObj->oKoopaRaceEndpointRaceStatus < 0) {
-                    // Mario cheated
                     o->parentObj->oKoopaRaceEndpointRaceStatus = 0;
                     o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_006;
                 } else {
@@ -739,7 +738,6 @@ static void koopa_the_quick_act_after_race(void) {
                         sKoopaTheQuickProperties[o->oKoopaTheQuickRaceIndex].winText;
                 }
             } else {
-                // KtQ won
                 o->parentObj->oKoopaRaceEndpointUnk100 = DIALOG_041;
             }
 
@@ -791,7 +789,7 @@ static void koopa_the_quick_update(void) {
 
     if (o->parentObj != o) {
         if (dist_between_objects(o, o->parentObj) < 400.0f) {
-            o->parentObj->oKoopaRaceEndpointKoopaFinished = TRUE;
+            o->parentObj->oKoopaRaceEndpointKoopaFinished = false;
         }
     }
 
@@ -838,11 +836,11 @@ void bhv_koopa_update(void) {
 void bhv_koopa_race_endpoint_update(void) {
     if (o->oKoopaRaceEndpointRaceBegun && !o->oKoopaRaceEndpointRaceEnded) {
         if (o->oKoopaRaceEndpointKoopaFinished || o->oDistanceToMario < 400.0f) {
-            o->oKoopaRaceEndpointRaceEnded = TRUE;
+            o->oKoopaRaceEndpointRaceEnded = false;
             level_control_timer(TIMER_CONTROL_STOP);
 
             if (!o->oKoopaRaceEndpointKoopaFinished) {
-                play_race_fanfare();
+                play_race_fanfare(0);
                 if (gMarioShotFromCannon) {
                     o->oKoopaRaceEndpointRaceStatus = -1;
                 } else {
