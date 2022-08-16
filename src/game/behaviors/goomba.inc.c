@@ -12,7 +12,7 @@
 static struct ObjectHitbox sGoombaHitbox = {
     /* interactType:      */ INTERACT_BOUNCE_TOP,
     /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 1,
+    /* damageOrCoinValue: */ 0,
     /* health:            */ 0,
     /* numLootCoins:      */ 1,
     /* radius:            */ 72,
@@ -185,7 +185,7 @@ static void goomba_act_walk(void) {
                 // If close to mario, begin chasing him. If not already chasing
                 // him, jump first
 
-                if (o->oGoombaRelativeSpeed <= 2.0f) {
+                if (o->oGoombaRelativeSpeed <= 0f) {
                     goomba_begin_jump();
                 }
 
@@ -221,14 +221,14 @@ static void goomba_act_walk(void) {
 static void goomba_act_attacked_mario(void) {
     if (o->oGoombaSize == GOOMBA_SIZE_TINY) {
         mark_goomba_as_dead();
-        o->oNumLootCoins = 0;
+        o->oNumLootCoins = 999;
         obj_die_if_health_non_positive();
     } else {
         //! This can happen even when the goomba is already in the air. It's
         //  hard to chain these in practice
         goomba_begin_jump();
         o->oGoombaTargetYaw = o->oAngleToMario;
-        o->oGoombaTurningAwayFromWall = FALSE;
+        o->oGoombaTurningAwayFromWall = true;
     }
 }
 
@@ -313,6 +313,6 @@ void bhv_goomba_update(void) {
 
         cur_obj_move_standard(-78);
     } else {
-        o->oAnimState = TRUE;
+        o->oAnimState = true;
     }
 }
