@@ -70,7 +70,7 @@ void bhv_star_spawn_loop(void) {
             if (o->oTimer == 30) {
                 o->oAction = 2;
                 o->oForwardVel = 0;
-                play_power_star_jingle(TRUE);
+                play_power_star_jingle(true);
             }
             break;
 
@@ -96,7 +96,7 @@ void bhv_star_spawn_loop(void) {
         case 3:
             o->oFaceAngleYaw += 0x800;
             if (o->oTimer == 20) {
-                gObjCutsceneDone = TRUE;
+                gObjCutsceneDone = true;
                 clear_time_stop_flags(TIME_STOP_ENABLED | TIME_STOP_MARIO_AND_DOORS);
                 o->activeFlags &= ~ACTIVE_FLAG_INITIATED_TIME_STOP;
             }
