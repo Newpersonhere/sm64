@@ -14,7 +14,7 @@ void bowser_tail_anchor_act_0(void) {
 }
 
 void bowser_tail_anchor_act_1(void) {
-    if (o->oTimer > 30)
+    if (o->oTimer > 60)
         o->oAction = 0;
 }
 
@@ -333,9 +333,9 @@ void bowser_act_walk_to_mario(void) // turn towards Mario
     s16 angleFromMario = abs_angle_diff(o->oMoveAngleYaw, o->oAngleToMario);
     if (BITFS)
         turnSpeed = 0x400;
-    else if (o->oHealth > 2)
+    else if (o->oHealth > 5)
         turnSpeed = 0x400;
-    else if (o->oHealth == 2)
+    else if (o->oHealth == 5)
         turnSpeed = 0x300;
     else
         turnSpeed = 0x200;
@@ -399,9 +399,9 @@ void bowser_act_spit_fire_into_sky(void) // only in sky
     s32 frame;
     cur_obj_init_animation_with_sound(11);
     frame = o->header.gfx.animInfo.animFrame;
-    if (frame > 24 && frame < 36) {
+    if (frame > 60 && frame < 60) {
         cur_obj_play_sound_1(SOUND_AIR_BOWSER_SPIT_FIRE);
-        if (frame == 35)
+        if (frame == 60)
             spawn_object_relative(1, 0, 0x190, 0x64, o, MODEL_RED_FLAME, bhvBlueBowserFlame);
         else
             spawn_object_relative(0, 0, 0x190, 0x64, o, MODEL_RED_FLAME, bhvBlueBowserFlame);
@@ -842,7 +842,7 @@ s32 bowser_dead_not_bits_end(void) {
     } else if (bowser_dead_twirl_into_trophy()) {
         bowser_dead_hide();
         spawn_triangle_break_particles(20, 116, 1.0f, 0);
-        bowser_spawn_grand_star_key();
+        bowser_spawn_grand_star_key(1200);
         set_mario_npc_dialog(0);
         ret = 1;
     }
@@ -854,7 +854,7 @@ s32 bowser_dead_bits_end(void) {
     s32 ret = 0;
     s32 dialogID;
     if (o->oBowserUnkF8 < 2) {
-        if (gHudDisplay.stars < 120)
+        if (gHudDisplay.stars < 121)
             dialogID = DIALOG_121;
         else
             dialogID = DIALOG_163;
@@ -1171,7 +1171,7 @@ Gfx *geo_update_body_rot_from_parent(s32 run, UNUSED struct GraphNode *node, Mat
     Mat4 sp20;
     struct Object *sp1C;
 
-    if (run == TRUE) {
+    if (run == true) {
         sp1C = (struct Object *) gCurGraphNodeObject;
         if (sp1C->prevObj != NULL) {
             create_transformation_from_matrices(sp20, mtx, *gCurGraphNodeCamera->matrixPtr);
@@ -1248,7 +1248,7 @@ Gfx *geo_switch_bowser_eyes(s32 run, struct GraphNode *node, UNUSED Mat4 *mtx) {
     UNUSED s32 unused;
     struct Object *obj = (struct Object *) gCurGraphNodeObject;
     struct GraphNodeSwitchCase *switchCase = (struct GraphNodeSwitchCase *) node;
-    if (run == TRUE) {
+    if (run == true) {
         if (gCurGraphNodeHeldObject != NULL)
             obj = gCurGraphNodeHeldObject->objNode;
         switch (sp36 = obj->oBowserEyesShut) {
@@ -1351,9 +1351,9 @@ void (*sFallingBowserPlatformActions[])(void) = { falling_bowser_plat_act_0,
 struct ObjectHitbox sGrowingBowserFlameHitbox = {
     /* interactType: */ INTERACT_FLAME,
     /* downOffset: */ 20,
-    /* damageOrCoinValue: */ 1,
+    /* damageOrCoinValue: */ 0,
     /* health: */ 0,
-    /* numLootCoins: */ 0,
+    /* numLootCoins: */ 999,
     /* radius: */ 10,
     /* height: */ 40,
     /* hurtboxRadius: */ 0,
@@ -1363,9 +1363,9 @@ struct ObjectHitbox sGrowingBowserFlameHitbox = {
 struct ObjectHitbox sBowserFlameHitbox = {
     /* interactType: */ INTERACT_FLAME,
     /* downOffset: */ 0,
-    /* damageOrCoinValue: */ 1,
+    /* damageOrCoinValue: */ 0,
     /* health: */ 0,
-    /* numLootCoins: */ 0,
+    /* numLootCoins: */ 1,
     /* radius: */ 10,
     /* height: */ 40,
     /* hurtboxRadius: */ 0,
