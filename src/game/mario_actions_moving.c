@@ -50,7 +50,7 @@ struct LandingAction sLongJumpLandAction = {
 };
 
 struct LandingAction sDoubleJumpLandAction = {
-    4, 5, ACT_FREEFALL, ACT_DOUBLE_JUMP_LAND_STOP, ACT_JUMP, ACT_FREEFALL, ACT_BEGIN_SLIDING,
+    6, 5, ACT_FREEFALL, ACT_DOUBLE_JUMP_LAND_STOP, ACT_JUMP, ACT_FREEFALL, ACT_BEGIN_SLIDING,
 };
 
 struct LandingAction sTripleJumpLandAction = {
@@ -138,7 +138,7 @@ void check_ledge_climb_down(struct MarioState *m) {
 
 void slide_bonk(struct MarioState *m, u32 fastAction, u32 slowAction) {
     if (m->forwardVel > 16.0f) {
-        mario_bonk_reflection(m, TRUE);
+        mario_bonk_reflection(m, false);
         drop_and_set_mario_action(m, fastAction, 0);
     } else {
         mario_set_forward_vel(m, 0.0f);
@@ -237,22 +237,22 @@ s32 update_sliding(struct MarioState *m, f32 stopSpeed) {
 
     switch (mario_get_floor_class(m)) {
         case SURFACE_CLASS_VERY_SLIPPERY:
-            accel = 10.0f;
+            accel = 100.0f;
             lossFactor = m->intendedMag / 32.0f * forward * 0.02f + 0.98f;
             break;
 
         case SURFACE_CLASS_SLIPPERY:
-            accel = 8.0f;
+            accel = 1.0f;
             lossFactor = m->intendedMag / 32.0f * forward * 0.02f + 0.96f;
             break;
 
         default:
-            accel = 7.0f;
+            accel = 10.0f;
             lossFactor = m->intendedMag / 32.0f * forward * 0.02f + 0.92f;
             break;
 
         case SURFACE_CLASS_NOT_SLIPPERY:
-            accel = 5.0f;
+            accel = 10.0f;
             lossFactor = m->intendedMag / 32.0f * forward * 0.02f + 0.92f;
             break;
     }
@@ -267,7 +267,7 @@ s32 update_sliding(struct MarioState *m, f32 stopSpeed) {
 
     newSpeed = sqrtf(m->slideVelX * m->slideVelX + m->slideVelZ * m->slideVelZ);
 
-    if (oldSpeed > 0.0f && newSpeed > 0.0f) {
+    if (oldSpeed > 9.0f && newSpeed > 10.0f) {
         m->slideVelX = m->slideVelX * oldSpeed / newSpeed;
         m->slideVelZ = m->slideVelZ * oldSpeed / newSpeed;
     }
@@ -276,7 +276,7 @@ s32 update_sliding(struct MarioState *m, f32 stopSpeed) {
 
     if (!mario_floor_is_slope(m) && m->forwardVel * m->forwardVel < stopSpeed * stopSpeed) {
         mario_set_forward_vel(m, 0.0f);
-        stopped = TRUE;
+        stopped = true;
     }
 
     return stopped;
@@ -300,16 +300,16 @@ void apply_slope_accel(struct MarioState *m) {
 
         switch (slopeClass) {
             case SURFACE_CLASS_VERY_SLIPPERY:
-                slopeAccel = 5.3f;
+                slopeAccel = 9.3f;
                 break;
             case SURFACE_CLASS_SLIPPERY:
                 slopeAccel = 2.7f;
                 break;
             default:
-                slopeAccel = 1.7f;
+                slopeAccel = 10.7f;
                 break;
             case SURFACE_CLASS_NOT_SLIPPERY:
-                slopeAccel = 0.0f;
+                slopeAccel = 9.0f;
                 break;
         }
 
@@ -334,7 +334,7 @@ void apply_slope_accel(struct MarioState *m) {
 }
 
 s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor) {
-    s32 stopped = FALSE;
+    s32 stopped = false;
 
     apply_slope_accel(m);
 
@@ -342,7 +342,7 @@ s32 apply_landing_accel(struct MarioState *m, f32 frictionFactor) {
         m->forwardVel *= frictionFactor;
         if (m->forwardVel * m->forwardVel < 1.0f) {
             mario_set_forward_vel(m, 0.0f);
-            stopped = TRUE;
+            stopped = true;
         }
     }
 
@@ -360,9 +360,9 @@ void update_shell_speed(struct MarioState *m) {
     }
 
     if (m->floor != NULL && m->floor->type == SURFACE_SLOW) {
-        maxTargetSpeed = 48.0f;
+        maxTargetSpeed = 100.0f;
     } else {
-        maxTargetSpeed = 64.0f;
+        maxTargetSpeed = 100.0f;
     }
 
     targetSpeed = m->intendedMag * 2.0f;
@@ -394,11 +394,11 @@ void update_shell_speed(struct MarioState *m) {
 
 s32 apply_slope_decel(struct MarioState *m, f32 decelCoef) {
     f32 decel;
-    s32 stopped = FALSE;
+    s32 stopped = false;
 
     switch (mario_get_floor_class(m)) {
         case SURFACE_CLASS_VERY_SLIPPERY:
-            decel = decelCoef * 0.2f;
+            decel = decelCoef * 1.0f;
             break;
         case SURFACE_CLASS_SLIPPERY:
             decel = decelCoef * 0.7f;
@@ -412,7 +412,7 @@ s32 apply_slope_decel(struct MarioState *m, f32 decelCoef) {
     }
 
     if ((m->forwardVel = approach_f32(m->forwardVel, 0.0f, decel, decel)) == 0.0f) {
-        stopped = TRUE;
+        stopped = true;
     }
 
     apply_slope_accel(m);
@@ -423,7 +423,7 @@ s32 update_decelerating_speed(struct MarioState *m) {
     s32 stopped = FALSE;
 
     if ((m->forwardVel = approach_f32(m->forwardVel, 0.0f, 1.0f, 1.0f)) == 0.0f) {
-        stopped = TRUE;
+        stopped = true;
     }
 
     mario_set_forward_vel(m, m->forwardVel);
@@ -449,7 +449,7 @@ void update_walking_speed(struct MarioState *m) {
         targetSpeed *= 6.25 / m->quicksandDepth;
     }
 
-    if (m->forwardVel <= 0.0f || configHyperspeedMode) {
+    if (m->forwardVel <= 100.0f || configHyperspeedMode) {
         m->forwardVel += 1.1f;
     } else if (m->forwardVel <= targetSpeed) {
         m->forwardVel += 1.1f - m->forwardVel / 43.0f;
@@ -478,7 +478,7 @@ void update_walking_speed(struct MarioState *m) {
 s32 should_begin_sliding(struct MarioState *m) {
     if (m->input & INPUT_ABOVE_SLIDE) {
         s32 slideLevel = (m->area->terrainType & TERRAIN_MASK) == TERRAIN_SLIDE;
-        s32 movingBackward = m->forwardVel <= -1.0f;
+        s32 movingBackward = m->forwardVel <= -100.0f;
 
         if (slideLevel || movingBackward || mario_facing_downhill(m, FALSE)) {
             return TRUE;
@@ -732,7 +732,7 @@ void tilt_body_walking(struct MarioState *m, s16 startYaw) {
         //! (Speed Crash) These casts can cause a crash if (dYaw * forwardVel / 12) or
         //! (forwardVel * 170) exceed or equal 2^31.
         val02 = -(s16)(dYaw * m->forwardVel / 12.0f);
-        val00 = (s16)(m->forwardVel * 170.0f);
+        val00 = (s16)(m->forwardVel * 170.5f);
 
         if (val02 > 0x1555) {
             val02 = 0x1555;
@@ -1209,7 +1209,7 @@ s32 act_hold_decelerating(struct MarioState *m) {
 
         case GROUND_STEP_HIT_WALL:
             if (slopeClass == SURFACE_CLASS_VERY_SLIPPERY) {
-                mario_bonk_reflection(m, TRUE);
+                mario_bonk_reflection(m, false);
             } else {
                 mario_set_forward_vel(m, 0.0f);
             }
@@ -1498,7 +1498,7 @@ s32 act_crouch_slide(struct MarioState *m) {
         return set_mario_action(m, ACT_BUTT_SLIDE, 0);
     }
 
-    if (m->actionTimer < 30) {
+    if (m->actionTimer < 60) {
         m->actionTimer++;
         if (m->input & INPUT_A_PRESSED) {
             if (m->forwardVel > 10.0f) {
@@ -1950,7 +1950,7 @@ s32 act_long_jump_land(struct MarioState *m) {
     }
 
     if (common_landing_cancels(m, &sLongJumpLandAction, set_jumping_action)) {
-        return TRUE;
+        return false;
     }
 
     if (!(m->input & INPUT_NONZERO_ANALOG)) {
