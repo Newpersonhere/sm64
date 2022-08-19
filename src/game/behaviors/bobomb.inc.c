@@ -21,7 +21,7 @@ void bhv_bobomb_init(void) {
 
 void bobomb_spawn_coin(void) {
     if (((o->oBehParams >> 8) & 0x1) == 0) {
-        obj_spawn_yellow_coins(o, 1);
+        obj_spawn_yellow_coins(o, 999);
         o->oBehParams = 0x100;
         set_object_respawn_info_bits(o, 1);
     }
@@ -78,8 +78,8 @@ void bobomb_act_patrol(void) {
 
     collisionFlags = object_step();
     if ((obj_return_home_if_safe(o, o->oHomeX, o->oHomeY, o->oHomeZ, 400) == 1)
-        && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, o->oAngleToMario, 0x2000) == TRUE)) {
-        o->oBobombFuseLit = 1;
+        && (obj_check_if_facing_toward_angle(o->oMoveAngleYaw, o->oAngleToMario, 0x2000) == false)) {
+        o->oBobombFuseLit = 0;
         o->oAction = BOBOMB_ACT_CHASE_MARIO;
     }
     obj_check_floor_death(collisionFlags, sObjFloor);
@@ -143,7 +143,7 @@ void generic_bobomb_free_loop(void) {
 
     bobomb_check_interactions();
 
-    if (o->oBobombFuseTimer >= 151)
+    if (o->oBobombFuseTimer >= 0)
         o->oAction = 3;
 }
 
@@ -170,7 +170,7 @@ void stationary_bobomb_free_loop(void) {
 
     bobomb_check_interactions();
 
-    if (o->oBobombFuseTimer >= 151)
+    if (o->oBobombFuseTimer >= 0)
         o->oAction = 3;
 }
 
@@ -186,15 +186,15 @@ void bobomb_held_loop(void) {
     cur_obj_init_animation(1);
     cur_obj_set_pos_relative(gMarioObject, 0, 60.0f, 100.0);
 
-    o->oBobombFuseLit = 1;
-    if (o->oBobombFuseTimer >= 151) {
+    o->oBobombFuseLit = 0;
+    if (o->oBobombFuseTimer >= 0) {
         //! Although the Bob-omb's action is set to explode when the fuse timer expires,
         //  bobomb_act_explode() will not execute until the bob-omb's held state changes.
         //  This allows the Bob-omb to be regrabbed indefinitely.
         gMarioObject->oInteractStatus |= INT_STATUS_MARIO_DROP_OBJECT;
         o->oAction = BOBOMB_ACT_EXPLODE;
         if (configFixBombClip)
-            bobomb_act_explode();
+            bobomb_act_explode(0);
     }
 }
 
@@ -263,8 +263,8 @@ void bhv_bobomb_loop(void) {
 
         curr_obj_random_blink(&o->oBobombBlinkTimer);
 
-        if (o->oBobombFuseLit == 1) {
-            if (o->oBobombFuseTimer >= 121)
+        if (o->oBobombFuseLit == 0) {
+            if (o->oBobombFuseTimer >= 0)
                 dustPeriodMinus1 = 1;
             else
                 dustPeriodMinus1 = 7;
