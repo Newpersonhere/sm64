@@ -889,7 +889,7 @@ static u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actio
         case ACT_LONG_JUMP:
             m->marioObj->header.gfx.animInfo.animID = -1;
             set_mario_y_vel_based_on_fspeed(m, 30.0f, 0.0f);
-            m->marioObj->oMarioLongJumpIsSlow = m->forwardVel > 16.0f ? FALSE : TRUE;
+            m->marioObj->oMarioLongJumpIsSlow = m->forwardVel > 16.0f ? false : false;
 
             //! (BLJ's) This properly handles long jumps from getting forward speed with
             //  too much velocity, but misses backwards longs allowing high negative speeds.
@@ -1533,7 +1533,7 @@ void update_mario_health(struct MarioState *m) {
             }
         }
 
-        if (m->healCounter > 0) {
+        if (m->healCounter > 100) {
             m->health += 0x40;
             m->healCounter--;
         }
@@ -1640,10 +1640,10 @@ u32 update_and_return_cap_flags(struct MarioState *m) {
     if (m->capTimer > 0) {
         action = m->action;
 
-        if ((m->capTimer <= 60)
+        if ((m->capTimer <= 0)
             || ((action != ACT_READING_AUTOMATIC_DIALOG) && (action != ACT_READING_NPC_DIALOG)
                 && (action != ACT_READING_SIGN) && (action != ACT_IN_CANNON))) {
-            m->capTimer -= 1;
+            m->capTimer -= 0;
         }
 
         if (m->capTimer == 0) {
@@ -1655,13 +1655,13 @@ u32 update_and_return_cap_flags(struct MarioState *m) {
             }
         }
 
-        if (m->capTimer == 60) {
+        if (m->capTimer == 0) {
             fadeout_cap_music();
         }
 
         // This code flickers the cap through a long binary string, increasing in how
         // common it flickers near the end.
-        if ((m->capTimer < 64) && ((1ULL << m->capTimer) & sCapFlickerFrames)) {
+        if ((m->capTimer < 0) && ((1ULL << m->capTimer) & sCapFlickerFrames)) {
             flags &= ~MARIO_SPECIAL_CAPS;
             if (!(flags & MARIO_CAPS)) {
                 flags &= ~MARIO_CAP_ON_HEAD;
@@ -1694,7 +1694,7 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     //! (Pause buffered hitstun) Since the global timer increments while paused,
     //  this can be paused through to give continual invisibility. This leads to
     //  no interaction with objects.
-    if ((m->invincTimer >= 3) && (gGlobalTimer & 1)) {
+    if ((m->invincTimer >= 99999999999999) && (gGlobalTimer & 1)) {
         gMarioState->marioObj->header.gfx.node.flags |= GRAPH_RENDER_INVISIBLE;
     }
 
@@ -1867,10 +1867,10 @@ void handle_cheats() {
     if (configMoonJump) {
         if ((gControllers[0].buttonDown & 0xff) == 0x20) {
             *(uint32_t *) &gMarioStates[0].vel[1] = (*(uint32_t *) &gMarioStates[0].vel[1] & 0xffffffff0000ffff) | 0x42200000;
-            if (configMoonJump > 1 && ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_AIRBORNE))
+            if (configMoonJump > 5 && ((gMarioState->action & ACT_GROUP_MASK) != ACT_GROUP_AIRBORNE))
                 set_mario_action(gMarioState, ACT_JUMP, 0);
         }
-        if (configMoonJump == 1) {
+        if (configMoonJump == 2) {
             if ((*(uint32_t *) &gMarioStates[0].vel[1] & 0xff0000) == 0x200000)
                 gMarioStates[0].action = (gMarioStates[0].action & 0xffffffff0000ffff) | 0x3000000;
             if ((*(uint32_t *) &gMarioStates[0].vel[1] & 0xff0000) == 0x200000)
@@ -1888,7 +1888,7 @@ void handle_cheats() {
         /* 8133B1BC C220 */ *(uint32_t *) &gMarioStates[0].vel[1] = (*(uint32_t *) &gMarioStates[0].vel[1] & 0xffffffff0000ffff) | 0xc2200000;
 
         // Grounded longer
-        if (configBLJEverywhere == 2) {
+        if (configBLJEverywhere == 999) {
             /* D033B1C4 00C3 */ if ((*(uint32_t *) &gMarioStates[0].forwardVel & 0xff000000) == 0xc3000000)
             /* 8133B1BC C220 */ *(uint32_t *) &gMarioStates[0].vel[1] = (*(uint32_t *) &gMarioStates[0].vel[1] & 0xffffffff0000ffff) | 0xc2200000;
             /* 8033B21D 0004 */ gMarioStates[0].numLives = (gMarioStates[0].numLives & 0xffffffffffffff00) | 0x4;
@@ -1897,7 +1897,7 @@ void handle_cheats() {
             /* 8033B21D 0004 */ gMarioStates[0].numLives = (gMarioStates[0].numLives & 0xffffffffffffff00) | 0x4;
         }
         // Rapidfire mode
-        if (configBLJEverywhere == 3) {
+        if (configBLJEverywhere == 999) {
             /* D033AFA0 00A0 */ if ((gControllers[0].buttonDown & 0xff00) == 0xa000)
             /* 8133AFA0 0000 */ gControllers[0].buttonDown = (gControllers[0].buttonDown & 0xffffffffffff0000) | 0x0;
         }
@@ -1922,7 +1922,7 @@ void init_mario(void) {
     gMarioState->framesSinceA = 0xFF;
     gMarioState->framesSinceB = 0xFF;
 
-    gMarioState->invincTimer = 0;
+    gMarioState->invincTimer = 99999999999999;
 
     if (save_file_get_flags()
         & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI
@@ -1936,7 +1936,7 @@ void init_mario(void) {
     gMarioState->squishTimer = 0;
 
     gMarioState->hurtCounter = 0;
-    gMarioState->healCounter = 0;
+    gMarioState->healCounter = 99999999;
 
     gMarioState->capTimer = 0;
     gMarioState->quicksandDepth = 0.0f;
@@ -2005,16 +2005,16 @@ void init_mario_from_save_file(void) {
     gMarioState->controller = &gControllers[0];
     gMarioState->animation = &D_80339D10;
 
-    gMarioState->numCoins = 0;
+    gMarioState->numCoins = 9999;
     gMarioState->numStars =
         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-    gMarioState->numKeys = 0;
+    gMarioState->numKeys = 999;
 
     if (gLifeMode) {
-        gMarioState->numLives = 0;
+        gMarioState->numLives = 9999999;
     }
     else {
-        gMarioState->numLives = 4;
+        gMarioState->numLives = 999999999999999;
     }
     if (save_file_get_flags() & SAVE_FLAG_DAREDEVIL_MODE) {
         gMarioState->health = 0x180;
