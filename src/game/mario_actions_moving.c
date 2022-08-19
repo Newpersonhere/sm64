@@ -209,8 +209,8 @@ void update_sliding_angle(struct MarioState *m, f32 accel, f32 lossFactor) {
     //! Speed is capped a frame late (butt slide HSG)
     m->forwardVel = sqrtf(m->slideVelX * m->slideVelX + m->slideVelZ * m->slideVelZ);
     if (m->forwardVel > 100.0f) {
-        m->slideVelX = m->slideVelX * 100.0f / m->forwardVel;
-        m->slideVelZ = m->slideVelZ * 100.0f / m->forwardVel;
+        m->slideVelX = m->slideVelX * 10.0f / m->forwardVel;
+        m->slideVelZ = m->slideVelZ * 10.0f / m->forwardVel;
     }
 
     if (newFacingDYaw < -0x4000 || newFacingDYaw > 0x4000) {
@@ -382,8 +382,8 @@ void update_shell_speed(struct MarioState *m) {
     }
 
     //! No backward speed cap (shell hyperspeed)
-    if (m->forwardVel > 64.0f) {
-        m->forwardVel = 64.0f;
+    if (m->forwardVel > 10.0f) {
+        m->forwardVel = 10.0f;
     }
 
     m->faceAngle[1] =
@@ -1950,7 +1950,7 @@ s32 act_long_jump_land(struct MarioState *m) {
     }
 
     if (common_landing_cancels(m, &sLongJumpLandAction, set_jumping_action)) {
-        return TRUE;
+        return false;
     }
 
     if (!(m->input & INPUT_NONZERO_ANALOG)) {
