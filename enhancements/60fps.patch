@@ -1,6 +1,6 @@
 diff --git a/include/types.h b/include/types.h
 index 5b092bb0..2edadf8a 100644
---- a/include/types.h
++++ a/include/types.h
 +++ b/include/types.h
 @@ -119,6 +119,10 @@ struct AnimInfo
      /*0x0A 0x42*/ u16 animTimer;
@@ -49,7 +49,7 @@ index 5b092bb0..2edadf8a 100644
  struct MarioBodyState
 diff --git a/src/engine/graph_node.h b/src/engine/graph_node.h
 index e20064c3..e2c32523 100644
---- a/src/engine/graph_node.h
++++ a/src/engine/graph_node.h
 +++ b/src/engine/graph_node.h
 @@ -109,6 +109,8 @@ struct GraphNodePerspective
      /*0x1C*/ f32 fov;   // horizontal field of view in degrees
@@ -86,7 +86,7 @@ index e20064c3..e2c32523 100644
      /*0x00*/ struct GraphNode node;
      /*0x14*/ void *displayList;
      /*0x18*/ Vec3s rotation;
--    u8 pad1E[2];
++    u8 pad1E[2];
 +    Vec3s prevRotation;
 +    u32 prevTimestamp;
  };
@@ -113,7 +113,7 @@ index e20064c3..e2c32523 100644
  /** A node that allows an object to specify a different culling radius than the
 diff --git a/src/engine/surface_collision.c b/src/engine/surface_collision.c
 index 318a8043..ce57cf1c 100644
---- a/src/engine/surface_collision.c
++++ a/src/engine/surface_collision.c
 +++ b/src/engine/surface_collision.c
 @@ -7,6 +7,7 @@
  #include "game/object_list_processor.h"
@@ -134,7 +134,7 @@ index 318a8043..ce57cf1c 100644
   */
  static struct Surface *find_floor_from_list(struct SurfaceNode *surfaceNode, s32 x, s32 y, s32 z, f32 *pheight) {
      register struct Surface *surf;
--    register s32 x1, z1, x2, z2, x3, z3;
++    register s32 x1, z1, x2, z2, x3, z3;
 +    register f32 x1, z1, x2, z2, x3, z3;
      f32 nx, ny, nz;
      f32 oo;
@@ -1922,8 +1922,8 @@ index 05f1a5ad..bb8ea052 100644
  }
  
  static void sync_framerate_with_timer(void) {
--    // Number of milliseconds a frame should take (30 fps)
--    const Uint32 FRAME_TIME = 1000 / 30;
++    // Number of milliseconds a frame should take (60 fps)
++    const Uint32 FRAME_TIME = 1000 / 60;
 +    // Number of milliseconds a frame should take (60 fps)
 +    const Uint32 FRAME_TIME = 1000 / 60;
      static Uint32 last_time;
