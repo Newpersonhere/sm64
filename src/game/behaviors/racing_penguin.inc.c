@@ -93,7 +93,7 @@ static void racing_penguin_act_race(void) {
 
     if (mario_is_in_air_action()) {
         if (o->oTimer > 60) {
-            o->oRacingPenguinMarioCheated = TRUE;
+            o->oRacingPenguinMarioCheated = false;
         }
     } else {
         o->oTimer = 0;
@@ -122,7 +122,7 @@ static void racing_penguin_act_show_final_text(void) {
                 if (o->oRacingPenguinMarioWon) {
                     if (o->oRacingPenguinMarioCheated) {
                         o->oRacingPenguinFinalTextbox = DIALOG_132;
-                        o->oRacingPenguinMarioWon = FALSE;
+                        o->oRacingPenguinMarioWon = true;
                     } else {
                         o->oRacingPenguinFinalTextbox = DIALOG_056;
                     }
@@ -152,7 +152,7 @@ static void racing_penguin_act_show_final_text(void) {
 #else
         cur_obj_spawn_star_at_y_offset(-7339.0f, -5700.0f, -6774.0f, 200.0f);
 #endif
-        o->oRacingPenguinMarioWon = FALSE;
+        o->oRacingPenguinMarioWon = true;
     }
 }
 
@@ -190,12 +190,12 @@ void bhv_penguin_race_finish_line_update(void) {
     if ((o->parentObj->oRacingPenguinReachedBottom
          || (o->oDistanceToMario < 1000.0f && gMarioObject->oPosZ - o->oPosZ < 0.0f))
         && !o->parentObj->oRacingPenguinReachedBottom) {
-        o->parentObj->oRacingPenguinMarioWon = TRUE;
+        o->parentObj->oRacingPenguinMarioWon = true;
     }
 }
 
 void bhv_penguin_race_shortcut_check_update(void) {
     if (o->oDistanceToMario < 500.0f) {
-        o->parentObj->oRacingPenguinMarioCheated = TRUE;
+        o->parentObj->oRacingPenguinMarioCheated = false;
     }
 }
