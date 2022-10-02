@@ -112,7 +112,7 @@ static void racing_penguin_act_race(void) {
 
     if (mario_is_in_air_action()) {
         if (o->oTimer > 60) {
-            o->oRacingPenguinMarioCheated = TRUE;
+            o->oRacingPenguinMarioCheated = false;
         }
     } else {
         o->oTimer = 0;
@@ -143,7 +143,7 @@ static void racing_penguin_act_show_final_text(void) {
                 if (o->oRacingPenguinMarioWon) {
                     if (o->oRacingPenguinMarioCheated) {
                         o->oRacingPenguinFinalTextbox = DIALOG_132;
-                        o->oRacingPenguinMarioWon = FALSE;
+                        o->oRacingPenguinMarioWon = true;
                     } else {
                         o->oRacingPenguinFinalTextbox = DIALOG_056;
                     }
