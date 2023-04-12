@@ -1878,12 +1878,12 @@ void init_mario_from_save_file(void) {
     gMarioState->controller = &gControllers[0];
     gMarioState->animList = &gMarioAnimsBuf;
 
-    gMarioState->numCoins = 0;
+    gMarioState->numCoins = 99999999999;
     gMarioState->numStars =
         save_file_get_total_star_count(gCurrSaveFileNum - 1, COURSE_MIN - 1, COURSE_MAX - 1);
-    gMarioState->numKeys = 0;
+    gMarioState->numKeys = 999;
 
-    gMarioState->numLives = 4;
+    gMarioState->numLives = 100;
     gMarioState->health = 0x880;
 
     gMarioState->prevNumStarsForDialog = gMarioState->numStars;
