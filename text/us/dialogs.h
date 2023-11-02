@@ -17,17 +17,17 @@
 #endif
 
 DEFINE_DIALOG(DIALOG_000, 1, 6, 30, 200, _("\
-Wow! You're smack in the\n\
+Wow! You're are in the\n\
 middle of the battlefield.\n\
-You'll find the Power\n\
-Stars that Bowser stole\n\
+You'll find the 120 Power\n\
+Stars that Evil King Bowser stole\n\
 inside the painting\n\
 worlds.\n\
 First, talk to the\n\
 Bob-omb Buddy. (Press [B]\n\
 to talk.) He'll certainly\n\
 help you out, and so will\n\
-his " COMRADES " in other\n\
+his "COMRADES" in other\n\
 areas.\n\
 To read signs, stop, face\n\
 them and press [B]. Press [A]\n\
@@ -47,12 +47,12 @@ always finding ways to\n\
 attack.\n\
 This meadow has become\n\
 a battlefield ever since\n\
-the Big Bob-omb got his\n\
+the King Bob-omb got his\n\
 paws on the Power Star.\n\
 Can you recover the Star\n\
 for us? Cross the bridge\n\
 and go left up the path\n\
-to find the Big Bob-omb.\n\
+to find the King Bob-omb.\n\
 Please come back to see\n\
 me after you've retrieved\n\
 the Power Star!"))
@@ -66,7 +66,7 @@ Cross the two\n\
 bridges ahead, then\n\
 watch for falling\n\
 water bombs.\n\
-The Big Bob-omb at the\n\
+The King Bob-omb at the\n\
 top of the mountain is\n\
 very powerful--don't let\n\
 him grab you!\n\
@@ -76,7 +76,7 @@ You can talk to us\n\
 whenever you'd like to!"))
 
 DEFINE_DIALOG(DIALOG_003, 1, 5, 95, 200, _("\
-Thank you, Mario! The Big\n\
+Thank you, Mario! The King\n\
 Bob-omb is nothing but a\n\
 big dud now! But the\n\
 battle for the castle has\n\
@@ -104,7 +104,7 @@ you to use. Bon Voyage!"))
 
 DEFINE_DIALOG(DIALOG_005, 1, 3, 30, 200, _("\
 Hey, Mario! Is it true\n\
-that you beat the Big\n\
+that you beat the King\n\
 Bob-omb? Cool!\n\
 You must be strong. And\n\
 pretty fast. So, how fast\n\
@@ -114,7 +114,7 @@ Koopa the Quick? I don't\n\
 think so. Just try me.\n\
 How about a race to the\n\
 mountaintop, where the\n\
-Big Bob-omb was?\n\
+King Bob-omb was?\n\
 Whaddya say? When I say\n\
 『Go,』 let the race begin!\n\
 \n\
@@ -239,9 +239,9 @@ ride wherever you want to\n\
 go! Shred those enemies!"))
 
 DEFINE_DIALOG(DIALOG_017, 1, 4, 30, 200, _("\
-I'm the Big Bob-omb, lord\n\
+I'm the King Bob-omb, lord\n\
 of all blasting matter,\n\
-king of ka-booms the\n\
+king of Bob-ombs the\n\
 world over!\n\
 How dare you scale my\n\
 mountain? By what right\n\
@@ -489,7 +489,7 @@ opens."))
 DEFINE_DIALOG(DIALOG_039, 1, 4, 30, 200, _("\
 No visitors allowed,\n\
 by decree of\n\
-the Big Bob-omb\n\
+the King Bob-omb\n\
 \n\
 I shall never surrender my\n\
 Stars, for they hold the\n\
@@ -506,7 +506,7 @@ perhaps one hint:\n\
 Heed the Star names at\n\
 the beginning of the\n\
 course.\n\
-//--The Big Bob-omb"))
+//--The King Bob-omb"))
 
 DEFINE_DIALOG(DIALOG_040, 1, 3, 30, 200, _("\
 Warning!\n\
